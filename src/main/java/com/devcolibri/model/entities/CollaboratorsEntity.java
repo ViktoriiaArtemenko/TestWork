@@ -1,18 +1,18 @@
-package com.devcolibri.model.entity;
+package com.devcolibri.model.entities;
 
 import com.devcolibri.model.database.ConnectDataBase;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.TreeSet;
+import java.util.HashSet;
 
-public class FreelancersEntity {
-    private String query = "SELECT * FROM `freelancers`";
-    private TreeSet<String> name = new TreeSet();
+public class CollaboratorsEntity {
+    private String query = "SELECT * FROM `collaborators`";
+    private HashSet<String> name = new HashSet();
     private ConnectDataBase connectDataBase = new ConnectDataBase();
 
-    public FreelancersEntity() {
+    public CollaboratorsEntity() {
         try (Statement statement = connectDataBase.getConnection().createStatement()) {
             ResultSet resultSet = statement.executeQuery(query);
             while (resultSet.next()) {
@@ -23,7 +23,7 @@ public class FreelancersEntity {
         }
     }
 
-    public TreeSet getName() {
+    public HashSet getName() {
         return name;
     }
 }

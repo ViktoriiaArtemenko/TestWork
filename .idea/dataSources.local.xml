@@ -7,5 +7,10 @@
       <introspection-scope>collaborators:</introspection-scope>
       <resolve-scope>collaborators:</resolve-scope>
     </data-source>
+    <data-source name="MySQL - @localhost" uuid="5af2f747-1c01-4d38-b485-5b091c04a99d">
+      <secret-storage>master_key</secret-storage>
+      <introspection-scope>:</introspection-scope>
+      <resolve-scope>:</resolve-scope>
+    </data-source>
   </component>
 </project>
