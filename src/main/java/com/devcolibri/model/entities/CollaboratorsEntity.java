@@ -1,29 +1,43 @@
 package com.devcolibri.model.entities;
 
-import com.devcolibri.model.database.ConnectDataBase;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 
 public class CollaboratorsEntity {
-    private String query = "SELECT * FROM `collaborators`";
+    private LinkedHashMap<String, Integer> id = new LinkedHashMap();
     private HashSet<String> name = new HashSet();
-    private ConnectDataBase connectDataBase = new ConnectDataBase();
+    private LinkedList<Integer> salary = new LinkedList();
+    private LinkedList<Integer> hour = new LinkedList();
 
     public CollaboratorsEntity() {
-        try (Statement statement = connectDataBase.getConnection().createStatement()) {
-            ResultSet resultSet = statement.executeQuery(query);
-            while (resultSet.next()) {
-                name.add(resultSet.getString("name"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
     public HashSet getName() {
         return name;
+    }
+
+    public LinkedList<Integer> getSalary() {
+        return salary;
+    }
+
+    public void setSalary(LinkedList<Integer> salary) {
+        this.salary = salary;
+    }
+
+    public LinkedList<Integer> getHour() {
+        return hour;
+    }
+
+    public void setHour(LinkedList<Integer> hour) {
+        this.hour = hour;
+    }
+
+    public LinkedHashMap<String, Integer> getId() {
+        return id;
+    }
+
+    public void setId(LinkedHashMap<String, Integer> id) {
+        this.id = id;
     }
 }

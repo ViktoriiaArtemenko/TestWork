@@ -1,35 +1,33 @@
 package com.devcolibri.model.entities;
 
-import com.devcolibri.model.database.ConnectDataBase;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.LinkedHashMap;
 import java.util.TreeSet;
 
 public class FreelancersEntity {
-    private String query = "SELECT * FROM `freelancers`";
-    private String[] nameArray;
+    private LinkedHashMap<String, Integer> id = new LinkedHashMap();
     private TreeSet<String> name = new TreeSet();
-    private ConnectDataBase connectDataBase = new ConnectDataBase();
+    private TreeSet<String> salary = new TreeSet();
 
     public FreelancersEntity() {
-        try (Statement statement = connectDataBase.getConnection().createStatement()) {
-            ResultSet resultSet = statement.executeQuery(query);
-            while (resultSet.next()) {
-                name.add(resultSet.getString("name"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        nameArray = name.toArray(new String[name.size()]);
     }
 
     public TreeSet getName() {
         return name;
     }
 
-    public String[] getNameArray() {
-        return nameArray;
+    public TreeSet<String> getSalary() {
+        return salary;
+    }
+
+    public void setSalary(TreeSet<String> salary) {
+        this.salary = salary;
+    }
+
+    public LinkedHashMap<String, Integer> getId() {
+        return id;
+    }
+
+    public void setId(LinkedHashMap<String, Integer> id) {
+        this.id = id;
     }
 }

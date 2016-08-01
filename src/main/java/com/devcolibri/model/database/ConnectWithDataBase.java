@@ -4,13 +4,13 @@ import com.mysql.fabric.jdbc.FabricMySQLDriver;
 
 import java.sql.*;
 
-public class ConnectDataBase {
+public class ConnectWithDataBase {
     private final String URL = "jdbc:mysql://localhost:3306/collaborators";
     private final String USERNAME = "root";
     private final String PASSWORD = "";
     private Connection connection;
 
-    public ConnectDataBase() {
+    public ConnectWithDataBase() {
         try {
             Driver driver = new FabricMySQLDriver();
             DriverManager.registerDriver(driver);

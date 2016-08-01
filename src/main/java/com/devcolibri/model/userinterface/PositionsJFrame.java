@@ -1,21 +1,23 @@
 package com.devcolibri.model.userinterface;
 
-import com.devcolibri.model.modules.ModelWorking;
-import com.devcolibri.model.modules.WorkSchedule;
+import com.devcolibri.model.entities.CollaboratorsEntity;
+import com.devcolibri.model.entities.FreelancersEntity;
+import com.devcolibri.model.entities.PositionsEntity;
+import com.devcolibri.model.modules.WorkingModule;
+import com.devcolibri.model.modules.WorkScheduleModule;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.ListIterator;
 
 public class PositionsJFrame extends BaseJFrame {
     private String title = "Должности";
-    private String rate = "Ставка: ";
     private JList<String> jList = new JList();
     private JLabel jLabel = new JLabel(title);
 
-    public PositionsJFrame(ModelWorking modelWorking, WorkSchedule workSchedule) {
-        super(modelWorking, workSchedule);
+    public PositionsJFrame(CollaboratorsEntity collaboratorsEntity, FreelancersEntity freelancersEntity, PositionsEntity
+            positionsEntity, WorkingModule workingModule, WorkScheduleModule workScheduleModule) {
+        super(collaboratorsEntity, freelancersEntity, positionsEntity, workingModule, workScheduleModule);
         setLocation(370, 180);
         setSize(625, 400);
         setTitle(title);
@@ -23,18 +25,9 @@ public class PositionsJFrame extends BaseJFrame {
         setContentPane(jPanel);
         setVisible(true);
 
-        setList(jList, getListOfPositions(), jScrollPane, jViewport, jLabel, Color.green, new Dimension(0, 0),
-                new Point(0, 0), jPanel);
-    }
-
-    private String[] getListOfPositions() {
-        String[] array = new String[positionsEntity.getPosition().size()];
-        ListIterator<String> listIterator = positionsEntity.getPosition().listIterator();
-        for (int i = 0; i < array.length; i++) {
-            array[i] = "<html>" + listIterator.next() + " - " + positionsEntity.getActionArray()[i] + ".<br> " + rate +
-                    positionsEntity.getRateArray()[i] + "<br><br><html>";
-        }
-        return array;
+        jList.setListData(positionsModule.getListOfPositionsAndRate());
+        setList(jList, jScrollPane, jViewport, true, jLabel, Color.green,
+                new Dimension(0, 0), new Point(0, 0), jPanel);
     }
 
     @Override

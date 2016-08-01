@@ -4,26 +4,18 @@ import java.util.*;
 
 import static java.util.Collections.shuffle;
 
-public class WorkSchedule {
-    private ModelWorking modelWorking;
-
+public class WorkScheduleModule {
+    private WorkingModule workingModule;
     private LinkedHashMap<String, TreeSet<Integer>> listCollaboratorsSchedule = new LinkedHashMap();
     private LinkedHashSet<TreeSet<Integer>> listOfSchedules;
-
     private Calendar calendar = Calendar.getInstance();
-    private Locale locale = Locale.getDefault();
 
-
-    public WorkSchedule(ModelWorking modelWorking) {
-        this.modelWorking = modelWorking;
+    public WorkScheduleModule(WorkingModule workingModule) {
+        this.workingModule = workingModule;
         calendar.set(Calendar.DAY_OF_MONTH, 3);
         calendar.set(Calendar.MONTH, 6);
         setWorkScheduleOfCollaborator();
         listOfSchedules = new LinkedHashSet(listCollaboratorsSchedule.values());
-//        System.out.print(calendar.get(Calendar.DAY_OF_MONTH) + " ");
-//        System.out.print(calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, locale) + " ");
-//        System.out.print(calendar.get(Calendar.YEAR) + " ");
-//        System.out.print(calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, locale));
     }
 
     private Integer[] getWorkScheduleSevenDay() {
@@ -58,14 +50,10 @@ public class WorkSchedule {
     }
 
     private void setWorkScheduleOfCollaborator() {
-        Iterator<String> iterator = modelWorking.getListOfNameCollaborators().iterator();
+        Iterator<String> iterator = workingModule.getListOfNameCollaborators().iterator();
         while (iterator.hasNext()){
             listCollaboratorsSchedule.put(iterator.next(), getWorkScheduleMonth());
         }
-    }
-
-    public LinkedHashMap<String, TreeSet<Integer>> getListCollaboratorsSchedule() {
-        return listCollaboratorsSchedule;
     }
 
     public LinkedHashSet<TreeSet<Integer>> getListOfSchedules() {

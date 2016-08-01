@@ -1,25 +1,29 @@
 package com.devcolibri.model.userinterface;
 
-import com.devcolibri.model.modules.ModelWorking;
-import com.devcolibri.model.modules.WorkSchedule;
+import com.devcolibri.model.entities.CollaboratorsEntity;
+import com.devcolibri.model.entities.FreelancersEntity;
+import com.devcolibri.model.entities.PositionsEntity;
+import com.devcolibri.model.modules.WorkingModule;
+import com.devcolibri.model.modules.WorkScheduleModule;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.TreeSet;
 
 public class CollaboratorsJFrame extends BaseJFrame {
-    private JTabbedPane jTabbedPane = new JTabbedPane(SwingConstants.LEFT, JTabbedPane.SCROLL_TAB_LAYOUT);
-    private String title = "Сотрудники";
-    private String work = "Рабочий график:";
-    private String month = "Июль: ";
-    private JPanel jPanel;
-    private JLabel jLabel;
+    protected JTabbedPane jTabbedPane = new JTabbedPane(SwingConstants.LEFT, JTabbedPane.SCROLL_TAB_LAYOUT);
+    protected String title = "Сотрудники";
+    protected String work = "Рабочий график:";
+    protected String month = "Июль: ";
 
-    public CollaboratorsJFrame(ModelWorking modelWorking, WorkSchedule workSchedule) {
-        super(modelWorking, workSchedule);
+    protected JPanel jPanel;
+    protected JLabel jLabel;
+
+    public CollaboratorsJFrame(CollaboratorsEntity collaboratorsEntity, FreelancersEntity freelancersEntity, PositionsEntity
+            positionsEntity, WorkingModule workingModule, WorkScheduleModule workScheduleModule) {
+        super(collaboratorsEntity, freelancersEntity, positionsEntity, workingModule, workScheduleModule);
         setLocation(370, 180);
         setSize(625, 350);
         setTitle(title);
@@ -29,11 +33,10 @@ public class CollaboratorsJFrame extends BaseJFrame {
         setTabbedPane();
     }
 
-    private void setTabbedPane() {
-        LinkedList<String> linkedList = concatOneAndTwoListOfPositions();
-        ListIterator<String> listIterator = linkedList.listIterator();
-        Iterator<String> iterator = modelWorking.getListOfNameCollaborators().iterator();
-        Iterator<TreeSet<Integer>> iterator1 = workSchedule.getListOfSchedules().iterator();
+    protected void setTabbedPane() {
+        ListIterator<String> listIterator = workingModule.getOneAndTwoListOfPositions().listIterator();
+        Iterator<String> iterator = workingModule.getListOfNameCollaborators().iterator();
+        Iterator<TreeSet<Integer>> iterator1 = workScheduleModule.getListOfSchedules().iterator();
         while (iterator.hasNext()) {
             jLabel = new JLabel("<html>" + listIterator.next() + "<br>" + work + "<br>" + month + iterator1.next()
                     + "<html>");
