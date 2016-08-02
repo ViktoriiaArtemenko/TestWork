@@ -20,7 +20,15 @@ public abstract class BaseJFrame extends JFrame implements ActionListener {
     protected String textHour = "09:00";
     protected String infoText = "Выберите кто будет выполнять задание. Затем выберите одно из распоряжений";
     protected String messageDialogTitle = "Важная информация";
-    protected String messageDialogText = "Данный сотрудник не может выполнить это распоряжение";
+    protected String messageDialogPosition = "Данный сотрудник не может выполнить это распоряжение";
+    protected String messageDialogPriority = "Нужно выбрать распоряжение с большим приоритетом";
+    protected String messageDialogSalary = "Нужно выбрать распоряжение, которое имеет большую оплату";
+    protected String fileSaved = "Файл сохранен";
+    protected String timeText = "4 июля 2016 понедельник";
+
+    boolean flagValid;
+    boolean flagCollEmpty;
+    boolean flagFreeEmpty;
 
     protected PositionsModule positionsModule;
     protected WorkingModule workingModule;
@@ -43,7 +51,7 @@ public abstract class BaseJFrame extends JFrame implements ActionListener {
     protected JViewport jViewport;
 
     protected JLabel jLabelTimer = new JLabel();
-    protected JLabel jLabelDate = new JLabel("4 июля 2016 понедельник");
+    protected JLabel jLabelDate = new JLabel(timeText);
     protected JLabel jLabelHour = new JLabel(textHour);
     protected JLabel jLabelTask = new JLabel();
     protected JLabel jLabelCollaborator = new JLabel();
@@ -162,32 +170,45 @@ public abstract class BaseJFrame extends JFrame implements ActionListener {
 
 
     protected void execute() {
-        boolean flag = true;
-        boolean flagColl = jListCollaborators.isSelectionEmpty();
-        boolean flagFree = jListFreelancers.isSelectionEmpty();
+        flagValid = true;
+        flagCollEmpty = jListCollaborators.isSelectionEmpty();
+        flagFreeEmpty = jListFreelancers.isSelectionEmpty();
 
         jButtonExecute.setEnabled(false);
         jButtonChange.setEnabled(false);
 
-        if (!flagColl) flag = positionsModule.getFlagPositionAndInstruction(jListCollaborators.getSelectedValue(),
-                jListTasks.getSelectedValue());
-        if (!flagFree) {
+        if (!flagCollEmpty)
+            flagValid = positionsModule.getFlagPositionAndInstruction(jListCollaborators.getSelectedValue(),
+                    jListTasks.getSelectedValue(), listTasksModel);
+        if (!flagFreeEmpty) {
             String value = jListTasks.getSelectedValue();
             String str = "Выполнить уборку в офисе";
             Pattern pat = Pattern.compile(str);
             Matcher mat = pat.matcher(value);
-            if (mat.find()) flag = false;
+            if (mat.find()) flagValid = false;
         }
-        if (!flag) {
-            JOptionPane.showMessageDialog(this, messageDialogText, messageDialogTitle,
-                    JOptionPane.INFORMATION_MESSAGE);
-            jButtonChange.setEnabled(true);
-            return;
+        if (!flagValid || workingModule.isFlagPriority() || workingModule.isFlagSalary()) {
+            if (!flagValid) {
+                JOptionPane.showMessageDialog(this, messageDialogPosition, messageDialogTitle,
+                        JOptionPane.INFORMATION_MESSAGE);
+                jButtonChange.setEnabled(true);
+                return;
+            } else if (workingModule.isFlagPriority() && !flagCollEmpty) {
+                JOptionPane.showMessageDialog(this, messageDialogPriority,
+                        messageDialogTitle, JOptionPane.INFORMATION_MESSAGE);
+                jButtonChange.setEnabled(true);
+                return;
+            } else if (workingModule.isFlagSalary() && !flagCollEmpty && workingModule.isFlagPriority()) {
+                JOptionPane.showMessageDialog(this, messageDialogSalary,
+                        messageDialogTitle, JOptionPane.INFORMATION_MESSAGE);
+                jButtonChange.setEnabled(true);
+                return;
+            }
         }
 
-        if (!flagColl)
+        if (!flagCollEmpty)
             workingModule.recordingDataColl(jListTasks.getSelectedValue(), jListCollaborators.getSelectedValue());
-        if (!flagFree)
+        if (!flagFreeEmpty)
             workingModule.recordingDataFree(jListTasks.getSelectedValue(), jListFreelancers.getSelectedValue());
 
         jLabelCollaborator.setText("");
@@ -195,18 +216,18 @@ public abstract class BaseJFrame extends JFrame implements ActionListener {
         jLabelTask.setText("");
 
         String str = "";
-        if (!flagColl) str = jListCollaborators.getSelectedValue();
-        if (!flagFree) str = jListFreelancers.getSelectedValue();
+        if (!flagCollEmpty) str = jListCollaborators.getSelectedValue();
+        if (!flagFreeEmpty) str = jListFreelancers.getSelectedValue();
         listExecuteModel.addElement(str + " (" + jListTasks.getSelectedValue() + ")");
         int index = listExecuteModel.size() - 1;
         jListExecute.setSelectedIndex(index);
         jListExecute.ensureIndexIsVisible(index);
 
-        if (!flagColl) {
+        if (!flagCollEmpty) {
             listCollaboratorsModel.remove(jListCollaborators.getSelectedIndex());
             jListCollaborators.clearSelection();
         }
-        if (!flagFree) {
+        if (!flagFreeEmpty) {
             listFreelancersModel.remove(jListFreelancers.getSelectedIndex());
             jListFreelancers.clearSelection();
         }
@@ -230,7 +251,7 @@ public abstract class BaseJFrame extends JFrame implements ActionListener {
                 } catch (IOException e) {
                 }
             }
-            JOptionPane.showMessageDialog(this, "Файл сохранен");
+            JOptionPane.showMessageDialog(this, fileSaved);
         }
     }
 }

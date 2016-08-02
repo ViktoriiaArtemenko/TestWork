@@ -21,6 +21,7 @@ public class ReportsCollaborators extends CollaboratorsJFrame {
     private LinkedList<String> listGeneral = new LinkedList();
     private String hourText = "часы";
     private String salaryText = " зарплата: ";
+    private String report = "Сформулировать отчет";
 
     public ReportsCollaborators(CollaboratorsEntity collaboratorsEntity, FreelancersEntity freelancersEntity,
                                 PositionsEntity positionsEntity, WorkingModule workingModule,
@@ -34,7 +35,7 @@ public class ReportsCollaborators extends CollaboratorsJFrame {
         JButton jButton;
         while (iterator.hasNext()) {
             name = iterator.next();
-            jButton = new JButton("Сформулировать отчет");
+            jButton = new JButton(report);
             jButton.setFocusPainted(false);
             jButton.setActionCommand(name);
             jButton.addActionListener(new ActionListener() {

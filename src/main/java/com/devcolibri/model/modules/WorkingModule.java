@@ -9,10 +9,12 @@ import java.util.*;
 import static java.util.Collections.shuffle;
 
 public class WorkingModule {
-
     private int amountOfCollaborators;
     private String[] listOfNameCollaboratorsArray;
     private String[] collaboratorsWithPositions;
+
+    private boolean flagPriority = false;
+    private boolean flagSalary = false;
 
     private String director = "Директор";
     private String manager = "Менеджер";
@@ -46,7 +48,6 @@ public class WorkingModule {
         this.positionsEntity = positionsEntity;
 
         amountOfCollaborators = 3 + random.nextInt(98);
-        System.out.println(amountOfCollaborators);
         listOfNameCollaborators = setListOfNameCollaborators();
         listOfNameCollaboratorsArray = listOfNameCollaborators.toArray(new String[listOfNameCollaborators.size()]);
         listOfPositionsOneAndNamesMap = new LinkedHashMap();
@@ -253,5 +254,21 @@ public class WorkingModule {
 
     public LinkedHashMap<String, String> getListOfPositionsTwoAndNamesMap() {
         return listOfPositionsTwoAndNamesMap;
+    }
+
+    public boolean isFlagPriority() {
+        return flagPriority;
+    }
+
+    public void setFlagPriority(boolean flagPriority) {
+        this.flagPriority = flagPriority;
+    }
+
+    public boolean isFlagSalary() {
+        return flagSalary;
+    }
+
+    public void setFlagSalary(boolean flagSalary) {
+        this.flagSalary = flagSalary;
     }
 }

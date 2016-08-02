@@ -2,14 +2,26 @@ package com.devcolibri.model.modules;
 
 import com.devcolibri.model.entities.PositionsEntity;
 
+import javax.swing.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class PositionsModule {
     private PositionsEntity positionsEntity;
-    private String rate = "Ставка: ";
-    private String priority = "приоритет";
+    private String rateText = "Ставка: ";
+    private String priorityText = "приоритет";
+    private String fixRateText = " - фиксированная ставка, ";
+    private String hourRateText = " - почасовая ставка";
     private Random random = new Random();
     private WorkingModule workingModule;
+    private int priority1;
+    private int salary1;
+    private int priority;
+    private int salary;
+    private int countPriority;
+    private int countSalary;
+
 
     public PositionsModule(PositionsEntity positionsEntity, WorkingModule workingModule) {
         this.positionsEntity = positionsEntity;
@@ -24,8 +36,8 @@ public class PositionsModule {
         ListIterator<Integer> iteratorF = listF.listIterator();
         rateArray = new String[positionsEntity.getRateFix().size()];
         for (int i = 0; i < rateArray.length; i++) {
-            rateArray[i] = String.valueOf(iteratorF.next()) + " - фиксированная ставка, " +
-                    String.valueOf(iteratorH.next()) + " - почасовая ставка";
+            rateArray[i] = String.valueOf(iteratorF.next()) + fixRateText +
+                    String.valueOf(iteratorH.next()) + hourRateText;
         }
         return rateArray;
     }
@@ -34,7 +46,7 @@ public class PositionsModule {
         String[] array = new String[positionsEntity.getPosition().size()];
         ListIterator<String> listIterator = positionsEntity.getPosition().listIterator();
         for (int i = 0; i < array.length; i++) {
-            array[i] = "<html>" + listIterator.next() + " - " + getActionArray()[i] + ".<br> " + rate +
+            array[i] = "<html>" + listIterator.next() + " - " + getActionArray()[i] + ".<br> " + rateText +
                     getRateArray()[i] + "<br><br><html>";
         }
         return array;
@@ -59,13 +71,14 @@ public class PositionsModule {
             strInstruction = listIterator.next();
             pr = 1 + random.nextInt(6);
             price = 50 + random.nextInt(200);
-            act.add(strInstruction + " (" + priority + " " + pr + "; " + price + " $)");
+            act.add(strInstruction + " (" + priorityText + " " + pr + "; " + price + " $)");
         }
         String[] instructionsArray = act.toArray(new String[act.size()]);
         return instructionsArray;
     }
 
-    public boolean getFlagPositionAndInstruction(String collaborators, String tasks) {
+    public boolean getFlagPositionAndInstruction(String collaborators, String tasks, DefaultListModel<String>
+            listTasksModel) {
         boolean flag = false;
         String position1, position2;
         StringTokenizer stringTokenizer1 = new StringTokenizer(collaborators, "(,) ");
@@ -78,6 +91,7 @@ public class PositionsModule {
         String str = stringTokenizer2.nextToken();
         String action = str.substring(0, str.length() - 1);
 
+        checkPriority(position1, position2, tasks, listTasksModel);
 
         try {
             if (positionsEntity.getAction().get(position1).equals(action) || positionsEntity.getAction().get(position2).
@@ -87,4 +101,72 @@ public class PositionsModule {
         }
         return flag;
     }
+
+    public void checkPriority(String position1, String position2, String tasks, DefaultListModel<String>
+            listTasksModel) {
+        countPriority = 0;
+        countSalary = 0;
+        String action1, action2;
+        Pattern pat;
+        Matcher mat;
+        StringTokenizer stringTokenizer = new StringTokenizer(tasks, ")(;$");
+        StringTokenizer stringTokenizer2;
+        stringTokenizer.nextElement();
+
+        workingModule.setFlagPriority(false);
+        workingModule.setFlagSalary(false);
+
+        String str = stringTokenizer.nextToken();
+        str = str.substring(10, 11);
+        priority1 = Integer.parseInt(str);
+
+        str = stringTokenizer.nextToken();
+        str = str.substring(1, str.length() - 1);
+        salary1 = Integer.parseInt(str);
+
+        action1 = positionsEntity.getAction().get(position1);
+        action2 = positionsEntity.getAction().get(position2);
+
+        LinkedList<String> linkedList = new LinkedList();
+        for (int i = 0; i < listTasksModel.size(); i++) {
+            linkedList.add(listTasksModel.getElementAt(i));
+        }
+
+        ListIterator<String> listIterator = linkedList.listIterator();
+        while (listIterator.hasNext()) {
+            str = listIterator.next();
+
+            stringTokenizer2 = new StringTokenizer(str, ")(;$");
+            stringTokenizer2.nextElement();
+
+            String str1 = stringTokenizer2.nextToken();
+            str1 = str1.substring(10, 11);
+            priority = Integer.parseInt(str1);
+
+            str1 = stringTokenizer2.nextToken();
+            str1 = str1.substring(1, str1.length() - 1);
+            salary = Integer.parseInt(str1);
+
+            pat = Pattern.compile(action1);
+            mat = pat.matcher(str);
+            comparePriorityAndSalary(mat);
+
+            if (action2 != null) {
+                pat = Pattern.compile(action2);
+                mat = pat.matcher(str);
+                comparePriorityAndSalary(mat);
+            }
+        }
+
+        if (countPriority != 0) workingModule.setFlagPriority(true);
+        if (countSalary != 0) workingModule.setFlagSalary(true);
+    }
+
+    public void comparePriorityAndSalary(Matcher mat) {
+        if (mat.find()) {
+            if (priority1 < priority) countPriority++;
+            else if (salary1 < salary) countSalary++;
+        }
+    }
+
 }
