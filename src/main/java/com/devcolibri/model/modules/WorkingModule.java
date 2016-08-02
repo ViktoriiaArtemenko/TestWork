@@ -9,13 +9,15 @@ import java.util.*;
 import static java.util.Collections.shuffle;
 
 public class WorkingModule {
-    private String director = "Директор";
-    private String manager = "Менеджер";
-    private String accountant = "Бухгалтер";
 
     private int amountOfCollaborators;
     private String[] listOfNameCollaboratorsArray;
     private String[] collaboratorsWithPositions;
+
+    private String director = "Директор";
+    private String manager = "Менеджер";
+    private String accountant = "Бухгалтер";
+    private String cleaner = "Уборщик";
 
     private TreeSet<String> listOfNameCollaborators;
     private LinkedList<String> listOfPositionCollaboratorsOne;
@@ -43,7 +45,8 @@ public class WorkingModule {
         this.freelancersEntity = freelancersEntity;
         this.positionsEntity = positionsEntity;
 
-        amountOfCollaborators = 3 + random.nextInt(97);
+        amountOfCollaborators = 3 + random.nextInt(98);
+        System.out.println(amountOfCollaborators);
         listOfNameCollaborators = setListOfNameCollaborators();
         listOfNameCollaboratorsArray = listOfNameCollaborators.toArray(new String[listOfNameCollaborators.size()]);
         listOfPositionsOneAndNamesMap = new LinkedHashMap();
@@ -104,15 +107,18 @@ public class WorkingModule {
             listOfPositionsOneAndNamesMap.put(iterator.next(), str);
         }
 
+        LinkedList<String> listOfPositions = new LinkedList(positionsEntity.getRateFix().keySet());
+        ListIterator<String> listIterator = listOfPositions.listIterator();
+        String position;
+
         int i = 0;
-        if (!listOfPositionsOneAndNamesMap.containsValue(director)) {
-            listOfPositionsOneAndNamesMap.put(name[++i], director);
-        }
-        if (!listOfPositionsOneAndNamesMap.containsValue(accountant)) {
-            listOfPositionsOneAndNamesMap.put(name[++i], accountant);
-        }
-        if (!listOfPositionsOneAndNamesMap.containsValue(manager)) {
-            listOfPositionsOneAndNamesMap.put(name[++i], manager);
+        while (listIterator.hasNext()) {
+            position = listIterator.next();
+            if (!listOfPositionsOneAndNamesMap.containsValue(position) &&
+                    positionsEntity.getRateFix().get(position) != 0) {
+                listOfPositionsOneAndNamesMap.put(name[i++], position);
+            }
+            if (i == name.length) break;
         }
         listOfPositionCollaboratorsOne = new LinkedList(listOfPositionsOneAndNamesMap.values());
     }
@@ -127,45 +133,33 @@ public class WorkingModule {
         while (iteratorOneList.hasNext()) {
             str1 = iteratorOneList.next().toString();
             str2 = iteratorShuffle.next().toString();
-            if (str1.equals(str2)) listOfPositionCollaboratorsTwo.add("NULL");
+            if (str1.equals(str2) || str1.equals(cleaner) || str2.equals(cleaner))
+                listOfPositionCollaboratorsTwo.add("NULL");
             else
                 switch (str1) {
                     case "Директор":
                         int i = random.nextInt(2);
                         if (i == 1) listOfPositionCollaboratorsTwo.add("NULL");
-                        else listOfPositionCollaboratorsTwo.add("Менеджер");
-                        break;
-                    case "Уборщик":
-                        listOfPositionCollaboratorsTwo.add("NULL");
+                        else listOfPositionCollaboratorsTwo.add(manager);
                         break;
                     case "Бухгалтер":
                         int j = random.nextInt(2);
-                        if (j == 1) listOfPositionCollaboratorsTwo.add("Менеджер");
+                        if (j == 1) listOfPositionCollaboratorsTwo.add(manager);
                         else listOfPositionCollaboratorsTwo.add("NULL");
                         break;
                     case "Менеджер":
                         int k = random.nextInt(2);
-                        if (k == 1) listOfPositionCollaboratorsTwo.add("Бухгалтер");
+                        if (k == 1) listOfPositionCollaboratorsTwo.add(accountant);
+                        if (k == 0) listOfPositionCollaboratorsTwo.add(director);
                         else listOfPositionCollaboratorsTwo.add("NULL");
                         break;
                     default:
-                        switch (str2) {
-                            case "Директор":
-                                listOfPositionCollaboratorsTwo.add("NULL");
-                                break;
-                            case "Уборщик":
-                                listOfPositionCollaboratorsTwo.add("NULL");
-                                break;
-                            case "Бухгалтер":
-                                listOfPositionCollaboratorsTwo.add("NULL");
-                                break;
-                            case "Менеджер":
-                                listOfPositionCollaboratorsTwo.add("NULL");
-                                break;
-                            default:
-                                listOfPositionCollaboratorsTwo.add(str2);
-                                break;
+                        int count = 0;
+                        for (int l = 0; l < positionsEntity.getRateFix().size(); l++) {
+                            if (positionsEntity.getRateFix().get(str2) != 0) count++;
                         }
+                        if (count != 0) listOfPositionCollaboratorsTwo.add("NULL");
+                        else listOfPositionCollaboratorsTwo.add(str2);
                         break;
                 }
         }
