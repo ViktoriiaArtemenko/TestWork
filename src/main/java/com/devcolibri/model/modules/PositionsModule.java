@@ -91,7 +91,7 @@ public class PositionsModule {
         String str = stringTokenizer2.nextToken();
         String action = str.substring(0, str.length() - 1);
 
-        checkPriority(position1, position2, tasks, listTasksModel);
+        checkPrioritySalary(position1, position2, tasks, listTasksModel);
 
         try {
             if (positionsEntity.getAction().get(position1).equals(action) || positionsEntity.getAction().get(position2).
@@ -102,7 +102,7 @@ public class PositionsModule {
         return flag;
     }
 
-    public void checkPriority(String position1, String position2, String tasks, DefaultListModel<String>
+    public void checkPrioritySalary(String position1, String position2, String tasks, DefaultListModel<String>
             listTasksModel) {
         countPriority = 0;
         countSalary = 0;
@@ -110,7 +110,6 @@ public class PositionsModule {
         Pattern pat;
         Matcher mat;
         StringTokenizer stringTokenizer = new StringTokenizer(tasks, ")(;$");
-        StringTokenizer stringTokenizer2;
         stringTokenizer.nextElement();
 
         workingModule.setFlagPriority(false);
@@ -136,14 +135,14 @@ public class PositionsModule {
         while (listIterator.hasNext()) {
             str = listIterator.next();
 
-            stringTokenizer2 = new StringTokenizer(str, ")(;$");
-            stringTokenizer2.nextElement();
+            stringTokenizer = new StringTokenizer(str, ")(;$");
+            stringTokenizer.nextElement();
 
-            String str1 = stringTokenizer2.nextToken();
+            String str1 = stringTokenizer.nextToken();
             str1 = str1.substring(10, 11);
             priority = Integer.parseInt(str1);
 
-            str1 = stringTokenizer2.nextToken();
+            str1 = stringTokenizer.nextToken();
             str1 = str1.substring(1, str1.length() - 1);
             salary = Integer.parseInt(str1);
 

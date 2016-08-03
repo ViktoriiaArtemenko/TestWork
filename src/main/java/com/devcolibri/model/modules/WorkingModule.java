@@ -15,11 +15,11 @@ public class WorkingModule {
 
     private boolean flagPriority = false;
     private boolean flagSalary = false;
+    private boolean flagPriorityValid = false;
 
     private String director = "Директор";
     private String manager = "Менеджер";
     private String accountant = "Бухгалтер";
-    private String cleaner = "Уборщик";
 
     private TreeSet<String> listOfNameCollaborators;
     private LinkedList<String> listOfPositionCollaboratorsOne;
@@ -134,14 +134,14 @@ public class WorkingModule {
         while (iteratorOneList.hasNext()) {
             str1 = iteratorOneList.next().toString();
             str2 = iteratorShuffle.next().toString();
-            if (str1.equals(str2) || str1.equals(cleaner) || str2.equals(cleaner))
-                listOfPositionCollaboratorsTwo.add("NULL");
-            else
                 switch (str1) {
                     case "Директор":
                         int i = random.nextInt(2);
                         if (i == 1) listOfPositionCollaboratorsTwo.add("NULL");
                         else listOfPositionCollaboratorsTwo.add(manager);
+                        break;
+                    case "Уборщик":
+                        listOfPositionCollaboratorsTwo.add("NULL");
                         break;
                     case "Бухгалтер":
                         int j = random.nextInt(2);
@@ -155,16 +155,29 @@ public class WorkingModule {
                         else listOfPositionCollaboratorsTwo.add("NULL");
                         break;
                     default:
-                        int count = 0;
-                        for (int l = 0; l < positionsEntity.getRateFix().size(); l++) {
-                            if (positionsEntity.getRateFix().get(str2) != 0) count++;
+                        switch (str2) {
+                            case "Директор":
+                                listOfPositionCollaboratorsTwo.add("NULL");
+                                break;
+                            case "Уборщик":
+                                listOfPositionCollaboratorsTwo.add("NULL");
+                                break;
+                            case "Бухгалтер":
+                                listOfPositionCollaboratorsTwo.add("NULL");
+                                break;
+                            case "Менеджер":
+                                listOfPositionCollaboratorsTwo.add("NULL");
+                                break;
+                            default:
+                                if (str1.equals(str2)) listOfPositionCollaboratorsTwo.add("NULL");
+                                listOfPositionCollaboratorsTwo.add(str2);
+                                break;
                         }
-                        if (count != 0) listOfPositionCollaboratorsTwo.add("NULL");
-                        else listOfPositionCollaboratorsTwo.add(str2);
                         break;
                 }
         }
     }
+
 
     private void concatOneAndTwoListOfPositions() {
         LinkedList<String> linkedList = new LinkedList();
@@ -270,5 +283,13 @@ public class WorkingModule {
 
     public void setFlagSalary(boolean flagSalary) {
         this.flagSalary = flagSalary;
+    }
+
+    public boolean isFlagPriorityValid() {
+        return flagPriorityValid;
+    }
+
+    public void setFlagPriorityValid(boolean flagPriorityValid) {
+        this.flagPriorityValid = flagPriorityValid;
     }
 }

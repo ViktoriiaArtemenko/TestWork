@@ -179,6 +179,7 @@ public class MainJFrame extends BaseJFrame implements ListCellRenderer {
                 break;
 
             case "change":
+                workingModule.setFlagPriorityValid(false);
                 jButtonChange.setEnabled(false);
                 jButtonExecute.setEnabled(false);
                 jListTasks.setEnabled(true);

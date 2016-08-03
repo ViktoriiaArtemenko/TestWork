@@ -197,14 +197,18 @@ public abstract class BaseJFrame extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(this, messageDialogPriority,
                         messageDialogTitle, JOptionPane.INFORMATION_MESSAGE);
                 jButtonChange.setEnabled(true);
+                workingModule.setFlagPriorityValid(true);
                 return;
-            } else if (workingModule.isFlagSalary() && !flagCollEmpty && workingModule.isFlagPriority()) {
+            } else if (workingModule.isFlagSalary() && !flagCollEmpty && !workingModule.isFlagPriority() &&
+                    workingModule.isFlagPriorityValid()) {
                 JOptionPane.showMessageDialog(this, messageDialogSalary,
                         messageDialogTitle, JOptionPane.INFORMATION_MESSAGE);
                 jButtonChange.setEnabled(true);
                 return;
             }
         }
+
+        workingModule.setFlagPriorityValid(false);
 
         if (!flagCollEmpty)
             workingModule.recordingDataColl(jListTasks.getSelectedValue(), jListCollaborators.getSelectedValue());
